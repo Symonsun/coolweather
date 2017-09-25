@@ -1,5 +1,6 @@
 package org.test.ssy.coolweather;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Build;
@@ -22,6 +23,7 @@ import com.bumptech.glide.Glide;
 
 import org.test.ssy.coolweather.gson.Forecast;
 import org.test.ssy.coolweather.gson.Weather;
+import org.test.ssy.coolweather.service.AutoUpdateService;
 import org.test.ssy.coolweather.util.HttpUtil;
 import org.test.ssy.coolweather.util.Utility;
 
@@ -173,8 +175,8 @@ public class WeatherActivity extends AppCompatActivity {
                 });
             }
 
-
         });
+        loadBingPic();
     }
 
     /**
@@ -215,6 +217,13 @@ public class WeatherActivity extends AppCompatActivity {
         carWashText.setText(carWash);
         sportText.setText(sport);
         weatherLayout.setVisibility(View.VISIBLE);
+
+        if (weather != null && "ok".equals(weather.status)) {
+            Intent intent = new Intent(this, AutoUpdateService.class);
+            startService(intent);
+        } else {
+            Toast.makeText(WeatherActivity.this, "获取天气信息失败", Toast.LENGTH_SHORT).show();
+        }
     }
 
     private void loadBingPic() {
